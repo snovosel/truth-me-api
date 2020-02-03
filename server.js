@@ -1,4 +1,6 @@
 const express = require("express");
+const https = require("https");
+const fs = require("fs");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const redis = require("redis");
@@ -31,9 +33,9 @@ app.get("/", (req, res) => res.send("Hello World!"));
 app.post("/fortune", (req, res) => {
   const key = uniqid();
 
-  const oneDay = 60 * 60 * 24;
+  const oneDay = 60 * 60 * 8;
 
-  client.set(key, JSON.stringify(req.body), "EX", oneDay);
+  client.set(key, JSON.stringify(req.body), "EX", 30);
 
   res.send({ key });
 });
@@ -50,4 +52,12 @@ app.get("/fortune/:fortuneId", (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+https
+  .createServer(
+    {
+      key: fs.readFileSync("server.key"),
+      cert: fs.readFileSync("server.cert")
+    },
+    app
+  )
+  .listen(port, () => console.log(`Example app listening on port ${port}!`));
