@@ -7,7 +7,7 @@ const redis = require("redis");
 const uniqid = require("uniqid");
 
 const app = express();
-const port = 3030;
+const port = 443;
 
 const redisHost = "redis-19761.c15.us-east-1-2.ec2.cloud.redislabs.com";
 const redisPort = "19761";
